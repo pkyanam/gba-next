@@ -9,6 +9,10 @@ yarn-error.log*
 .env.production.local
 dist
 build
+.next
+out
+.vercel
+*.tsbuildinfo
 *.log
 .DS_Store
 coverage
