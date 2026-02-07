@@ -35,17 +35,17 @@ const RomList = styled('ul')`
   margin: 0;
   padding: 0;
 
-  & > ${StyledLi}:first-of-type > ${LoadRomButton} {
+  & > li:first-of-type > button {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
   }
 
-  & > ${StyledLi}:last-child > ${LoadRomButton} {
+  & > li:last-child > button {
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
   }
 
-  & > ${StyledLi}:not(:first-of-type) > ${LoadRomButton} {
+  & > li:not(:first-of-type) > button {
     border-top-width: 0;
   }
 `;

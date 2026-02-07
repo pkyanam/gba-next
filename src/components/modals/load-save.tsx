@@ -47,17 +47,17 @@ const SaveList = styled('ul')`
   margin: 0;
   padding: 0;
 
-  & > ${StyledLi}:first-of-type > ${LoadSaveButton} {
+  & > li:first-of-type > button {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
   }
 
-  & > ${StyledLi}:last-child > ${LoadSaveButton} {
+  & > li:last-child > button {
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
   }
 
-  & > ${StyledLi}:not(:first-of-type) > ${LoadSaveButton} {
+  & > li:not(:first-of-type) > button {
     border-top-width: 0;
   }
 `;

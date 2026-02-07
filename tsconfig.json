@@ -18,7 +18,8 @@
     "skipLibCheck": true,
     "incremental": true,
     "types": [
-      "node"
+      "node",
+      "wicg-file-system-access"
     ],
     "allowJs": true,
     "esModuleInterop": true

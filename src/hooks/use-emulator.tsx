@@ -13,8 +13,9 @@ export const useEmulator = (canvas: HTMLCanvasElement | null) => {
       if (!canvas) return;
 
       try {
+        const modulePath: string = '/wasm/mgba.js';
         const { default: mGBA } = (await import(
-          /* webpackIgnore: true */ '/wasm/mgba.js'
+          /* webpackIgnore: true */ modulePath
         )) as {
           default: typeof import('@thenick775/mgba-wasm').default;
         };
@@ -25,6 +26,8 @@ export const useEmulator = (canvas: HTMLCanvasElement | null) => {
             if (path.startsWith('http') || path.startsWith('/')) return path;
             return `/wasm/${path}`;
           }
+        } as Parameters<typeof mGBA>[0] & {
+          locateFile: (path: string) => string;
         });
 
         const mGBAVersion =

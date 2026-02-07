@@ -209,7 +209,8 @@ export const DragAndDropInput = ({
 
   const acceptedFileNames = acceptedFiles
     .map((file) => file.name)
-    .toSorted(sortAcceptedFiles ?? (() => 0));
+    .slice()
+    .sort(sortAcceptedFiles ?? (() => 0));
 
   return (
     <>

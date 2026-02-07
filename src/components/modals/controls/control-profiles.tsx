@@ -59,17 +59,17 @@ const ProfilesList = styled('ul')`
   margin: 0;
   padding: 0;
 
-  & > ${StyledLi}:first-of-type {
+  & > li:first-of-type {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
   }
 
-  & > ${StyledLi}:last-child {
+  & > li:last-child {
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
   }
 
-  & > ${StyledLi}:not(:first-of-type) {
+  & > li:not(:first-of-type) {
     border-top-width: 0;
   }
 `;

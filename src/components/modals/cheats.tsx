@@ -41,7 +41,7 @@ const CheatsList = styled('ul')<OptionallyHiddenProps>`
   margin: 0;
   max-width: 100%;
 
-  & > ${Cheat}:not(:first-of-type) {
+  & > li:not(:first-of-type) {
     padding-top: 10px;
   }
 `;
