@@ -2,6 +2,7 @@
 
 exports[`<Screen /> > renders with default desktop position and size 1`] = `
 .emotion-0 {
+  --system-menu-width: 220px;
   background-color: #000;
   overflow: visible;
   width: 100dvw;
@@ -11,7 +12,7 @@ exports[`<Screen /> > renders with default desktop position and size 1`] = `
 @media only screen and (min-width: 600px) {
   .emotion-0 {
     width: min(
-          calc(100dvw - 285px),calc(85dvh * 3 / 2)
+          calc(100dvw - 270px - var(--system-menu-width)),calc(85dvh * 3 / 2)
         );
     height: 85dvh;
   }
@@ -69,6 +70,7 @@ exports[`<Screen /> > renders with default desktop position and size 1`] = `
 
 exports[`<Screen /> > renders with default mobile position and size 1`] = `
 .emotion-0 {
+  --system-menu-width: 0px;
   background-color: #000;
   overflow: visible;
   width: 100dvw;
@@ -78,7 +80,7 @@ exports[`<Screen /> > renders with default mobile position and size 1`] = `
 @media only screen and (min-width: 600px) {
   .emotion-0 {
     width: min(
-          calc(100dvw - 285px),calc(85dvh * 3 / 2)
+          calc(100dvw - 270px - var(--system-menu-width)),calc(85dvh * 3 / 2)
         );
     height: 85dvh;
   }

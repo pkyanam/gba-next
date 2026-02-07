@@ -10,10 +10,16 @@ import {
   useLayoutContext,
   useResizeContext
 } from '../../hooks/context.tsx';
-import { NavigationMenuWidth } from '../navigation-menu/consts.tsx';
+import {
+  NavigationMenuWidth,
+  SystemMenuWidth
+} from '../navigation-menu/consts.tsx';
 import { GripperHandle } from '../shared/gripper-handle.tsx';
 
-type ScreenWrapperProps = RndProps & { $areItemsDraggable: boolean };
+type ScreenWrapperProps = RndProps & {
+  $areItemsDraggable: boolean;
+  $hasSystemMenu: boolean;
+};
 
 const defaultGBACanvasWidth = 240;
 const defaultGBACanvasHeight = 160;
@@ -34,8 +40,11 @@ const RenderCanvas = styled('canvas')`
 `;
 
 const ScreenWrapper = styled(Rnd, {
-  shouldForwardProp: (propName) => propName !== '$areItemsDraggable'
+  shouldForwardProp: (propName) =>
+    propName !== '$areItemsDraggable' && propName !== '$hasSystemMenu'
 })<ScreenWrapperProps>`
+  --system-menu-width: ${({ $hasSystemMenu }) =>
+    $hasSystemMenu ? `${SystemMenuWidth}px` : '0px'};
   background-color: ${({ theme }) => theme.pureBlack};
   overflow: visible;
   width: 100dvw;
@@ -43,7 +52,7 @@ const ScreenWrapper = styled(Rnd, {
 
   @media ${({ theme }) => theme.isLargerThanPhone} {
     width: min(
-      calc(100dvw - ${NavigationMenuWidth + 35}px),
+      calc(100dvw - ${NavigationMenuWidth + 20}px - var(--system-menu-width)),
       calc(85dvh * 3 / 2)
     );
     height: 85dvh;
@@ -83,6 +92,7 @@ export const Screen = () => {
   const isMobileLandscape = useMediaQuery(theme.isMobileLandscape, {
     noSsr: true
   });
+  const hasSystemMenu = isLargerThanPhone && !isMobileLandscape;
   const { setCanvas } = useEmulatorContext();
   const { areItemsDraggable } = useDragContext();
   const { areItemsResizable } = useResizeContext();
@@ -180,6 +190,7 @@ export const Screen = () => {
         });
       }}
       $areItemsDraggable={areItemsDraggable}
+      $hasSystemMenu={hasSystemMenu}
     >
       <RenderCanvas
         data-testid="screen-wrapper:render-canvas"

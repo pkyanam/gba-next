@@ -20,7 +20,6 @@ import {
   BiLogInCircle,
   BiLogOutCircle,
   BiCheckShield,
-  BiConversation,
   BiMenu,
   BiFileFind,
   BiBrain,
@@ -29,7 +28,7 @@ import {
 } from 'react-icons/bi';
 import { MdImportExport } from 'react-icons/md';
 
-import { NavigationMenuWidth } from './consts.tsx';
+import { NavigationMenuWidth, SystemMenuWidth } from './consts.tsx';
 import { NavComponent } from './nav-component.tsx';
 import { NavLeaf } from './nav-leaf.tsx';
 import {
@@ -65,13 +64,17 @@ type ExpandableComponentProps = {
   $isExpanded?: boolean;
 };
 
-const NavigationMenuWrapper = styled('div')<ExpandableComponentProps>`
+const NavigationMenuWrapper = styled('aside')<ExpandableComponentProps>`
   display: flex;
   flex-direction: column;
   width: ${NavigationMenuWidth}px;
   height: 100dvh;
   position: fixed;
-  background-color: ${({ theme }) => theme.mediumBlack};
+  background: linear-gradient(
+    180deg,
+    rgba(8, 12, 18, 0.98) 0%,
+    ${({ theme }) => theme.mediumBlack} 100%
+  );
   transition: left 0.4s ease-in-out;
   -webkit-transition: left 0.4s ease-in-out;
   z-index: 150;
@@ -79,6 +82,49 @@ const NavigationMenuWrapper = styled('div')<ExpandableComponentProps>`
   left: 0;
   top: 0;
   touch-action: none;
+  overflow: hidden;
+  border-right: 1px solid rgba(28, 118, 253, 0.28);
+  box-shadow: 14px 0 30px rgba(0, 0, 0, 0.45);
+  font-family: 'Oxanium', 'Space Grotesk', sans-serif;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+          circle at 15% 20%,
+          rgba(28, 118, 253, 0.18),
+          transparent 45%
+        ),
+      radial-gradient(
+          circle at 85% 12%,
+          rgba(255, 255, 255, 0.06),
+          transparent 40%
+        );
+    opacity: 0.65;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      rgba(28, 118, 253, 0.7) 0%,
+      rgba(28, 118, 253, 0.1) 70%
+    );
+    opacity: 0.6;
+  }
+
+  & > * {
+    position: relative;
+    z-index: 1;
+  }
 
   ${({ $isExpanded = false }) =>
     !$isExpanded &&
@@ -86,28 +132,121 @@ const NavigationMenuWrapper = styled('div')<ExpandableComponentProps>`
   `};
 `;
 
+const SystemMenuWrapper = styled('aside')`
+  display: flex;
+  flex-direction: column;
+  width: ${SystemMenuWidth}px;
+  height: 100dvh;
+  position: fixed;
+  right: 0;
+  top: 0;
+  background: linear-gradient(
+    200deg,
+    rgba(10, 14, 22, 0.98) 0%,
+    rgba(5, 8, 13, 0.98) 100%
+  );
+  z-index: 150;
+  text-align: left;
+  overflow: hidden;
+  border-left: 1px solid rgba(28, 118, 253, 0.24);
+  box-shadow: -14px 0 30px rgba(0, 0, 0, 0.45);
+  font-family: 'Oxanium', 'Space Grotesk', sans-serif;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+          circle at 75% 18%,
+          rgba(28, 118, 253, 0.16),
+          transparent 45%
+        ),
+      radial-gradient(
+          circle at 20% 85%,
+          rgba(255, 255, 255, 0.05),
+          transparent 40%
+        );
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      rgba(28, 118, 253, 0.1) 0%,
+      rgba(28, 118, 253, 0.7) 60%
+    );
+    opacity: 0.6;
+  }
+
+  & > * {
+    position: relative;
+    z-index: 1;
+  }
+`;
+
+const MenuHeader = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem 0.65rem;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 1.25rem;
+    right: 1.25rem;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(28, 118, 253, 0.5),
+      rgba(28, 118, 253, 0.05)
+    );
+  }
+`;
+
 const StyledMenuHeader = styled('h2')`
   color: ${({ theme }) => theme.pureWhite};
-  padding: 0.5rem 1rem;
-  font-size: calc(1.3rem + 0.6vw);
-  font-weight: 500;
-  line-height: 1.2;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0;
+`;
 
-  &:hover {
-    background-color: ${({ theme }) => theme.menuHighlight};
-  }
+const MenuBadge = styled('span')`
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.gbaThemeBlue};
+  border: 1px solid rgba(28, 118, 253, 0.35);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(28, 118, 253, 0.12);
 `;
 
 const MenuItemWrapper = styled('ul')`
   margin-bottom: 0;
   margin-top: 0;
   list-style: none;
-  padding: 0;
+  padding: 0.65rem 0.85rem 1rem;
   overflow-y: auto;
   overscroll-behavior: none;
   touch-action: pan-y;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
 
   &::-webkit-scrollbar {
     display: none;
@@ -117,20 +256,25 @@ const MenuItemWrapper = styled('ul')`
 const HamburgerButton = styled(ButtonBase)<
   ExpandableComponentProps & { $areItemsDraggable: boolean }
 >`
-  background-color: ${({ theme }) => theme.mediumBlack};
+  background: linear-gradient(
+    135deg,
+    rgba(28, 118, 253, 0.2),
+    rgba(10, 12, 18, 0.98)
+  );
   color: ${({ theme }) => theme.pureWhite};
   z-index: 200;
   position: fixed;
-  left: ${NavigationMenuWidth - 50}px;
+  left: ${NavigationMenuWidth + 10}px;
   top: 12px;
   transition: 0.4s ease-in-out;
   -webkit-transition: 0.4s ease-in-out;
   transition-property: left;
   cursor: pointer;
-  border-radius: 0.25rem;
-  border: none;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(28, 118, 253, 0.35);
   min-height: 36px;
   min-width: 40px;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.35);
 
   @media ${({ theme }) => theme.isMobileLandscape} {
     bottom: 15px;
@@ -180,7 +324,9 @@ export const NavigationMenu = () => {
   const theme = useTheme();
   const isLargerThanPhone = useMediaQuery(theme.isLargerThanPhone);
   const isMobileLandscape = useMediaQuery(theme.isMobileLandscape);
+  const showSystemMenu = isLargerThanPhone && !isMobileLandscape;
   const menuHeaderId = useId();
+  const systemHeaderId = useId();
   const { quickReload, isQuickReloadAvailable } = useQuickReload();
 
   const isMenuItemDisabledByAuth = !isAuthenticated();
@@ -188,6 +334,103 @@ export const NavigationMenu = () => {
   const hasNoLocalRoms = !emulator?.listRoms().length;
 
   useShowLoadPublicRoms();
+
+  const systemMenuNodes = (
+    <>
+      <NavLeaf
+        title="About"
+        icon={<BiInfoCircle />}
+        $withPadding
+        onClick={() => {
+          setModalContent(<AboutModal />);
+          setIsModalOpen(true);
+        }}
+      />
+      <NavLeaf
+        title="Emulator Settings"
+        icon={<BiBrain />}
+        $withPadding
+        onClick={() => {
+          setModalContent(<EmulatorSettingsModal />);
+          setIsModalOpen(true);
+        }}
+      />
+      <NavComponent
+        title="Profile"
+        icon={<BiUserCheck />}
+        $disabled={!hasApiLocation}
+      >
+        <NavLeaf
+          title="Login"
+          icon={<BiLogInCircle />}
+          onClick={() => {
+            setModalContent(<LoginModal />);
+            setIsModalOpen(true);
+          }}
+        />
+        <NavLeaf
+          title="Logout"
+          $disabled={isMenuItemDisabledByAuth}
+          icon={<BiLogOutCircle />}
+          onClick={executeLogout}
+        />
+        <NavLeaf
+          title="Load Save (Server)"
+          $disabled={isMenuItemDisabledByAuth}
+          icon={<BiCloudDownload />}
+          onClick={() => {
+            setModalContent(<LoadSaveModal />);
+            setIsModalOpen(true);
+          }}
+        />
+        <NavLeaf
+          title="Load Rom (Server)"
+          $disabled={isMenuItemDisabledByAuth}
+          icon={<BiCloudDownload />}
+          onClick={() => {
+            setModalContent(<LoadRomModal />);
+            setIsModalOpen(true);
+          }}
+        />
+        <NavLeaf
+          title="Send Save to Server"
+          $disabled={isMenuItemDisabledByAuth || !isRunning}
+          icon={<BiCloudUpload />}
+          onClick={() => {
+            setModalContent(<UploadSaveToServerModal />);
+            setIsModalOpen(true);
+          }}
+        />
+        <NavLeaf
+          title="Send Rom to Server"
+          $disabled={isMenuItemDisabledByAuth || !isRunning}
+          icon={<BiCloudUpload />}
+          onClick={() => {
+            setModalContent(<UploadRomToServerModal />);
+            setIsModalOpen(true);
+          }}
+        />
+      </NavComponent>
+      <NavLeaf
+        title="Import/Export"
+        icon={<MdImportExport />}
+        onClick={() => {
+          setModalContent(<ImportExportModal />);
+          setIsModalOpen(true);
+        }}
+        $withPadding
+      />
+      <NavLeaf
+        title="Legal"
+        icon={<BiCheckShield />}
+        onClick={() => {
+          setModalContent(<LegalModal />);
+          setIsModalOpen(true);
+        }}
+        $withPadding
+      />
+    </>
+  );
 
   return (
     <>
@@ -224,18 +467,11 @@ export const NavigationMenu = () => {
         id="menu-wrapper"
         $isExpanded={isExpanded}
       >
-        <StyledMenuHeader id={menuHeaderId}>Menu</StyledMenuHeader>
+        <MenuHeader>
+          <StyledMenuHeader id={menuHeaderId}>Menu</StyledMenuHeader>
+          <MenuBadge>Deck</MenuBadge>
+        </MenuHeader>
         <MenuItemWrapper aria-labelledby={menuHeaderId}>
-          <NavLeaf
-            title="About"
-            icon={<BiInfoCircle />}
-            $withPadding
-            onClick={() => {
-              setModalContent(<AboutModal />);
-              setIsModalOpen(true);
-            }}
-          />
-
           <NavComponent
             title="Pre Game Actions"
             $disabled={isRunning}
@@ -344,102 +580,20 @@ export const NavigationMenu = () => {
               setIsModalOpen(true);
             }}
           />
-
-          <NavLeaf
-            title="Emulator Settings"
-            icon={<BiBrain />}
-            $withPadding
-            onClick={() => {
-              setModalContent(<EmulatorSettingsModal />);
-              setIsModalOpen(true);
-            }}
-          />
-
-          <NavComponent
-            title="Profile"
-            icon={<BiUserCheck />}
-            $disabled={!hasApiLocation}
-          >
-            <NavLeaf
-              title="Login"
-              icon={<BiLogInCircle />}
-              onClick={() => {
-                setModalContent(<LoginModal />);
-                setIsModalOpen(true);
-              }}
-            />
-            <NavLeaf
-              title="Logout"
-              $disabled={isMenuItemDisabledByAuth}
-              icon={<BiLogOutCircle />}
-              onClick={executeLogout}
-            />
-            <NavLeaf
-              title="Load Save (Server)"
-              $disabled={isMenuItemDisabledByAuth}
-              icon={<BiCloudDownload />}
-              onClick={() => {
-                setModalContent(<LoadSaveModal />);
-                setIsModalOpen(true);
-              }}
-            />
-            <NavLeaf
-              title="Load Rom (Server)"
-              $disabled={isMenuItemDisabledByAuth}
-              icon={<BiCloudDownload />}
-              onClick={() => {
-                setModalContent(<LoadRomModal />);
-                setIsModalOpen(true);
-              }}
-            />
-            <NavLeaf
-              title="Send Save to Server"
-              $disabled={isMenuItemDisabledByAuth || !isRunning}
-              icon={<BiCloudUpload />}
-              onClick={() => {
-                setModalContent(<UploadSaveToServerModal />);
-                setIsModalOpen(true);
-              }}
-            />
-            <NavLeaf
-              title="Send Rom to Server"
-              $disabled={isMenuItemDisabledByAuth || !isRunning}
-              icon={<BiCloudUpload />}
-              onClick={() => {
-                setModalContent(<UploadRomToServerModal />);
-                setIsModalOpen(true);
-              }}
-            />
-          </NavComponent>
-
-          <NavLeaf
-            title="Import/Export"
-            icon={<MdImportExport />}
-            onClick={() => {
-              setModalContent(<ImportExportModal />);
-              setIsModalOpen(true);
-            }}
-            $withPadding
-          />
-
-          <NavLeaf
-            title="Legal"
-            icon={<BiCheckShield />}
-            onClick={() => {
-              setModalContent(<LegalModal />);
-              setIsModalOpen(true);
-            }}
-            $withPadding
-          />
-
-          <NavLeaf
-            title="Contact"
-            icon={<BiConversation />}
-            $link="https://github.com/thenick775/gbajs3"
-            $withPadding
-          />
+          {!showSystemMenu && systemMenuNodes}
         </MenuItemWrapper>
       </NavigationMenuWrapper>
+      {showSystemMenu && (
+        <SystemMenuWrapper data-testid="system-menu-wrapper">
+          <MenuHeader>
+            <StyledMenuHeader id={systemHeaderId}>System</StyledMenuHeader>
+            <MenuBadge>Core</MenuBadge>
+          </MenuHeader>
+          <MenuItemWrapper aria-labelledby={systemHeaderId}>
+            {systemMenuNodes}
+          </MenuItemWrapper>
+        </SystemMenuWrapper>
+      )}
       {isExpanded && (!isLargerThanPhone || isMobileLandscape) && (
         <NavigationMenuClearDismiss
           aria-label="Menu Dismiss"

@@ -1,6 +1,5 @@
 import { styled } from '@mui/material/styles';
 import { useEffect, useState, type ReactNode } from 'react';
-import AnimateHeight, { type Height } from 'react-animate-height';
 
 import { ButtonBase } from '../shared/custom-button-base.tsx';
 
@@ -16,15 +15,32 @@ type ComponentWrapperProps = {
   $disabled: boolean;
 };
 
+type ExpandableProps = {
+  $isExpanded: boolean;
+};
+
 const NavComponentWrapper = styled('li')<ComponentWrapperProps>`
+  display: block;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
   color: ${({ theme }) => theme.gbaThemeBlue};
   padding: 0 2px;
+  border-radius: 0.85rem;
+  background: linear-gradient(
+    95deg,
+    rgba(28, 118, 253, 0.14),
+    rgba(28, 118, 253, 0.02)
+  );
+  box-shadow: inset 0 0 0 1px rgba(28, 118, 253, 0.12);
 
   ${({ $disabled, theme }) =>
     $disabled &&
     `color: ${theme.disabledGray};
      pointer-events: none;
      cursor: default;
+     background: rgba(108, 117, 125, 0.08);
+     box-shadow: inset 0 0 0 1px rgba(108, 117, 125, 0.18);
     `}
 `;
 
@@ -33,23 +49,48 @@ const HoverWrapper = styled(ButtonBase)`
   border: none;
   color: inherit;
   cursor: pointer;
-  height: 100%;
+  min-height: 44px;
   padding: 0.5rem 1rem;
   text-align: inherit;
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  line-height: 1.2;
 
   &:hover {
     color: ${({ theme }) => theme.menuHover};
     background-color: ${({ theme }) => theme.menuHighlight};
   }
+
+  svg {
+    font-size: 1.15rem;
+  }
 `;
 
 const NavTitle = styled('span')`
-  margin-left: 0.5rem;
+  font-size: 0.8rem;
 `;
 
 const ChildrenWrapper = styled('ul')`
-  padding-left: 2rem;
+  list-style: none;
+  padding-left: 1.25rem;
+  margin: 0.35rem 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  border-left: 1px dashed rgba(28, 118, 253, 0.35);
+`;
+
+const ExpandableSection = styled('div')<ExpandableProps>`
+  max-height: ${({ $isExpanded }) => ($isExpanded ? '800px' : '0px')};
+  opacity: ${({ $isExpanded }) => ($isExpanded ? 1 : 0)};
+  overflow: hidden;
+  transition: max-height 350ms ease, opacity 250ms ease;
+  pointer-events: ${({ $isExpanded }) => ($isExpanded ? 'auto' : 'none')};
 `;
 
 export const NavComponent = ({
@@ -59,10 +100,10 @@ export const NavComponent = ({
   $isExpanded = false,
   $disabled = false
 }: NavComponentProps) => {
-  const [height, setHeight] = useState<Height>($isExpanded ? 'auto' : 0);
+  const [isExpanded, setIsExpanded] = useState($isExpanded);
 
   useEffect(() => {
-    setHeight($isExpanded ? 'auto' : 0);
+    setIsExpanded($isExpanded);
   }, [$isExpanded]);
 
   return (
@@ -70,16 +111,19 @@ export const NavComponent = ({
       <HoverWrapper
         disabled={$disabled}
         onClick={() => {
-          setHeight(height === 0 ? 'auto' : 0);
+          setIsExpanded((prevState) => !prevState);
         }}
       >
         {icon}
         <NavTitle>{title}</NavTitle>
       </HoverWrapper>
 
-      <AnimateHeight duration={350} easing="ease-in-out" height={height}>
+      <ExpandableSection
+        aria-hidden={!isExpanded}
+        $isExpanded={isExpanded}
+      >
         <ChildrenWrapper>{children}</ChildrenWrapper>
-      </AnimateHeight>
+      </ExpandableSection>
     </NavComponentWrapper>
   );
 };

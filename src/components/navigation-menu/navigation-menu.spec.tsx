@@ -40,7 +40,7 @@ describe('<NavigationMenu />', () => {
     expect(screen.getByLabelText('Menu Toggle')).toBeInTheDocument();
     expect(screen.getByLabelText('Menu Dismiss')).toBeInTheDocument();
     // renders default mounted menu items
-    expect(screen.getAllByRole('listitem')).toHaveLength(13);
+    expect(screen.getAllByRole('listitem')).toHaveLength(12);
   });
 
   it('toggles menu with button', async () => {
@@ -48,7 +48,7 @@ describe('<NavigationMenu />', () => {
 
     expect(screen.getByTestId('menu-wrapper')).toHaveStyle(`left: 0`);
     expect(screen.getByLabelText('Menu Toggle')).toHaveStyle(
-      `left: ${NavigationMenuWidth - 50}px`
+      `left: ${NavigationMenuWidth + 10}px`
     );
     expect(screen.getByLabelText('Menu Dismiss')).toBeInTheDocument();
 
@@ -64,7 +64,7 @@ describe('<NavigationMenu />', () => {
 
     expect(screen.getByTestId('menu-wrapper')).toHaveStyle(`left: 0`);
     expect(screen.getByLabelText('Menu Toggle')).toHaveStyle(
-      `left: ${NavigationMenuWidth - 50}px`
+      `left: ${NavigationMenuWidth + 10}px`
     );
     expect(screen.getByLabelText('Menu Dismiss')).toBeInTheDocument();
   });
@@ -74,7 +74,7 @@ describe('<NavigationMenu />', () => {
 
     expect(screen.getByTestId('menu-wrapper')).toHaveStyle(`left: 0`);
     expect(screen.getByLabelText('Menu Toggle')).toHaveStyle(
-      `left: ${NavigationMenuWidth - 50}px`
+      `left: ${NavigationMenuWidth + 10}px`
     );
     expect(screen.getByLabelText('Menu Dismiss')).toBeInTheDocument();
 
